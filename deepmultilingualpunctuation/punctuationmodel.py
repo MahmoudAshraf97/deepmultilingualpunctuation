@@ -5,11 +5,14 @@ from transformers import pipeline
 
 
 class PunctuationModel:
-    def __init__(self, model="oliverguhr/fullstop-punctuation-multilang-large") -> None:
-        if torch.cuda.is_available():
-            self.pipe = pipeline("ner", model, aggregation_strategy="none", device=0)
-        else:
-            self.pipe = pipeline("ner", model, aggregation_strategy="none")
+    def __init__(
+        self,
+        model="oliverguhr/fullstop-punctuation-multilang-large",
+        **kwargs,
+    ) -> None:
+        if "aggregation_strategy" not in kwargs:
+            kwargs["aggregation_strategy"] = "none"
+        self.pipe = pipeline("ner", model, **kwargs)
 
     def preprocess(self, text):
         # remove punctuation except dots
