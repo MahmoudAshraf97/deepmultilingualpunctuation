@@ -12,9 +12,10 @@ class PunctuationModel:
             self.pipe = pipeline("ner", model, aggregation_strategy="none")
 
     def preprocess(self, text):
-        # remove markers except for markers in numbers
-        text = re.sub(r"(?<!\d)[.,;:!?](?!\d)", "", text)
-        # todo: match acronyms https://stackoverflow.com/questions/35076016/regex-to-match-acronyms
+        # remove punctuation except dots
+        text = re.sub(r"[,;:!?]", "", text)
+        # remove dots that are not in acronyms or decimal points
+        text = re.sub(r"(?<!\b[a-zA-Z])(?<!\d)\.", "", text)
         text = text.split()
         return text
 
